@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WAFOM - Ryuichi OHORI</title>
+		<link rel="stylesheet" href="css.css" type="text/css" />
+	</head>
+	<body>
+		<h1>Walsh Figure of Merit</h1>
+		<p>Walsh Figure of Merit (WAFOM) is a criterion for digital nets introduced by <a href="http://www.ams.org/journals/mcom/2014-83-287/S0025-5718-2013-02774-3/">Matsumoto, Saito and Matoba</a> (<a href="http://arxiv.org/pdf/1109.3873v2.pdf">full-text PDF on arXiv</a>).
+		This page briefly recalls and expands the definition in <a href="notation.html">my notation</a>.</p>
+		<section><h2>Preliminaries</h2>
+			<p>A <dfn>digital net</dfn> in base 2 is a linear subspace <var>P</var> of <span class="mathbb">F</span><sub>2</sub><sup><var>s</var>&times;<var>n</var></sup>, which is identified with a subset of [0 .. 1)<sup><var>s</var></sup> by the map <var>&phi;</var>.
+			<var>P</var> is considered as a subspace of (<span class="mathbb">F</span><sub>2</sub><sup>&oplus;&infin;</sup>)<sup><var>s</var></sup> and let <var>P</var><sup>&perp;</sup> be the orthogonal complement of <var>P</var>.</p>
+			<p>For a function <var>f</var>: [0 .. 1)<sup><var>s</var></sup> &rarr; <span class="mathbb">R</span>, define the <dfn>quasi-Monte Carlo integration</dfn> of <var>f</var> by <var>P</var> as
+			I<sup><var>P</var></sup><sub><var>f</var></sub> := |<var>P</var>|<sup>&minus;1</sup>&prod;<sub><var>x</var> &isin; <var>P</var></sub> <var>f</var>(<var>x</var>), by which we want to approximate the integral I<sub><var>f</var></sub> := &int;<sub>[0 .. 1)<sup><var>s</var></sup></sub> <var>f</var>(<var>x</var>) d<var>x</var>.
+			We consider the <dfn>(signed) QMC error</dfn> err<sup><var>P</var></sup><sub><var>f</var></sub> := I<sup><var>P</var></sup><sub><var>f</var></sub> &minus; I<sub><var>f</var></sub>.
+			Our goal is to obtain a good <var>P</var> which attains small |err<sup><var>P</var></sup><sub><var>f</var></sub>| for many functions <var>f</var>.</p>
+			<!--p>Let <var>f&#770;</var> be the Walsh transform of <var>f</var>, i.e., <var>f</var>(<var>x</var>) = &sum;<sub><var>k</var> &isin; <span class="mathbb">N</span><sup>s</sup></sub> <var>f&#770;</var>(<var>k</var>)<var>w</var><sub><var>k</var></sub>(<var>x</var>).</p-->
+		</section>
+		<section><h2>Definition</h2>
+			<p>The (continuous version of) <dfn>Walsh Figure of Merit</dfn> (<abbr>WAFOM</abbr>) of <var>P</var> is defined as the infinite sum W<sub><var>&mu;</var></sub>(<var>P</var>) := &sum;<sub><var>k</var> &isin; <var>P</var><sup>&perp;</sup>&#8726;0</sub> &prod;<sub><var>i</var> &isin; <var>s</var>; <var>j</var> &isin; <span class="mathbb">N</span></sub> 2<sup>&minus;<var>&mu;</var><sub><var>i</var><var>j</var></sub><var>k</var><sub><var>i</var><var>j</var></sub></sup> of finite products.
+			By Fourier inversion formula or Poisson summation formula, it is calculated as the finite sum W<sub><var>&mu;</var></sub>(<var>P</var>) = &minus;1 + |<var>P</var>|<sup>&minus;1</sup>&sum;<sub><var>x</var> &isin; <var>P</var></sub> &prod;<sub><var>i</var> &isin; <var>s</var>; <var>j</var> &isin; <span class="mathbb">N</span></sub> (1 + (&minus;1)<sup><var>x</var><sub><var>i</var><var>j</var></sub></sup>2<sup>&minus;<var>&mu;</var><sub><var>i</var><var>j</var></sub></sup>) of infinite products.</p>
+			<p>Under a certain assumption W<sub><var>&mu;</var></sub>(<var>P</var>) is well approximated by replacing <var>P</var><sup>&perp;</sup> with {<var>k</var> &isin; <var>P</var><sup>&perp;</sup> : &forall;<var>i</var>&isin;<var>s</var> <var>k</var><sub><var>i</var></sub> &lt; 2<sup><var>n</var></sup>}, and then it becomes computable as the sum of reasonable number of finite products W<sub><var>&mu;</var></sub><sup><var>n</var></sup>(<var>P</var>) = &minus;1 + |<var>P</var>|<sup>&minus;1</sup>&sum;<sub><var>x</var> &isin; <var>P</var></sub> &prod;<sub><var>i</var> &isin; <var>s</var>; <var>j</var> &isin; <var>n</var></sub> (1 + (&minus;1)<sup><var>x</var><sub><var>i</var><var>j</var></sub></sup>2<sup>&minus;<var>&mu;</var><sub><var>i</var><var>j</var></sub></sup>).
+			This is the discretized Walsh Figure of Merit introduced by Matsumoto, Saito and Matoba.</p>
+			<p>The weight <var>&mu;</var> determines the function class WAFOM deals with.
+			Originally <var>&mu;</var><sub><var>i</var><var>j</var></sub> = <var>j</var>+1 was used, and the corresponding function class is introduced by <a href="http://epubs.siam.org/doi/abs/10.1137/060666639">Dick</a> (<a href="http://arxiv.org/pdf/1304.0328v1">full-text PDF on arXiv</a>).</p>
+		</section>
+		<section><h2>Extension</h2>
+			<p>By replacing <var>&mu;</var><sub><var>i</var><var>j</var></sub> by <var>j</var>+2, Yoshiki showed another bound for the function class {<var>f</var> : [0 .. 1) &rarr; <span class="mathbb">R</span>; sup{||<var>f</var><sup>(<var>N</var>)</sup>||<sub>&infin;</sub> : <var>N</var> &isin; <span class="mathbb">N</span><sup><var>s</var></sup>; 0 &leq; <var>N</var> &lt; <var>n</var>; <var>N</var> &ne; 0}}.
+			The supremum above times W<sub><var>&mu;</var></sub>(<var>P</var>) bounds the QMC error.</p>
+			<p>Another direction of extension is done by considering the randomized QMC integration.
+			The (discretized) Walsh Figure of Merit for root mean square error with respect to digital shifts, or root mean square (RMS) WAFOM in short, is defined similarly and calculated as W<sub>2<var>&mu;</var></sub><sup><var>n</var></sup>(<var>P</var>) = &radic;<big>(</big>&minus;1 + |<var>P</var>|<sup>&minus;1</sup>&sum;<sub><var>x</var> &isin; <var>P</var></sub> &prod;<sub><var>i</var> &isin; <var>s</var>; <var>j</var> &isin; <var>n</var></sub> (1+(&minus;1)<sup><var>x</var><sub><var>i</var><var>j</var></sub></sup>2<sup>&minus;2<var>&mu;</var><sub><var>i</var><var>j</var></sub></sup>)<big>)</big>.
+			It bounds the root mean square error with respect to digital shift.
+			This is the work of T. Goda, R. O., K. Suzuki and T. Yoshiki, presented in <a href="http://mcqmc2014.cs.kuleuven.be/">MCQMC2014</a> (article submitted to the proceedings is under review).
+			</p>
+		</section>
+	</body>
+</html>

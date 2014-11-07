@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>MCQMC2014GOSY - Ryuichi OHORI</title>
+		<link rel="stylesheet" href="../css.css" type="text/css" />
+	</head>
+	<body>
+		<h1>The Mean Square Quasi-Monte Carlo Error for Digitally Shifted Digital Nets</h1>
+		<p>This page lists the point set files we used in the talks in <a href="//mcqmc2014.cs.kuleuven.be">MCQMC2014</a> and paper (under review).</p>
+		<p>The <a href="../format.html">format of these files is described in another page</a>, and as a CSV each file additionally has nine columns.
+		Values of these columns correspond to our criterion and the root mean square errors of eight test functions, in the same order as the paper.</p>
+		<section>
+			<h2>Randomly generated digital nets</h2>
+			<ul>
+			<li><a href="s04-m10.csv"><var>s</var> = 4, <var>m</var> = 10</a></li>
+			<li><a href="s04-m12.csv"><var>s</var> = 4, <var>m</var> = 12</a></li>
+			<li><a href="s12-m10.csv"><var>s</var> = 12, <var>m</var> = 10</a></li>
+			<li><a href="s12-m12.csv"><var>s</var> = 12, <var>m</var> = 12</a></li>
+			</ul>
+			<h2>Good digital nets</h2>
+			<ul>
+			<li><a href="lw-s04.csv"><var>s</var> = 4, 8 &le; <var>m</var> &le; 20</a></li>
+			<li><a href="lw-s12.csv"><var>s</var> = 12, 8 &le; <var>m</var> &le; 20</a></li>
+			</ul>
+			<h2>Niederreiter-Xing sequence (for comparison with good digital nets above)</h2>
+			<p>These files are made by <a href="../format.html#convert">converting</a> from <a href="//people.cs.kuleuven.be/~dirk.nuyens/qmc-generators/">Magic point shop</a> by Dirk Nuyens.</p>
+			<ul>
+			<li><a href="nx-s04.csv"><var>s</var> = 4, 8 &le; <var>m</var> &le; 20</a> from <a href="//people.cs.kuleuven.be/~dirk.nuyens/qmc-generators/nxmats/nx_b2_m30_s4_Cs">nxmats/nx_b2_m30_s4_Cs</a></li>
+			<li><a href="nx-s12.csv"><var>s</var> = 12, 8 &le; <var>m</var> &le; 20</a> from <a href="//people.cs.kuleuven.be/~dirk.nuyens/qmc-generators/nxmats/nx_b2_m30_s12_Cs">nxmats/nx_b2_m30_s12_Cs</a></li>
+			</ul>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Implementation - Ryuichi OHORI</title>
+		<link rel="stylesheet" href="css.css" type="text/css" />
+	</head>
+	<body>
+		<h1>Implmentation</h1>
+		<p>This page briefly describes the implementation of digital nets in my repository.
+		The complete documentation is still in preparation.</p>
+		<p>Given the basis <var>p</var> and precision <var>n</var>, the constructor detects the dimension <var>m</var> over <span class="mathbb">F</span><sub>2</sub> and <var>s</var> over <span class="mathbb">R</span>.
+		Iterating over <var>P</var> is easy: just write <code>foreach (x; P)</code> loop if you need elements of <span class="mathbb">F</span><sub>2</sub><sup><var>s</var>&times;<var>n</var></sup> as <code>U[]</code>s.
+		Utility function <code>toReals</code> is provided for iterating over <var>P</var> &sub; [0 .. 1)<sup><var>s</var></sup>: write <code>foreach (x; toReals!F(P))</code> or <code>foreach (x; P.toReals!F())</code> using <a href="http://dlang.org/function.html#pseudo-member">UFCS</a>.
+		Here <code>F</code> is the floating point type you need, one of the following: 32-bit <code>float</code>, 64-bit <code>double</code> or 80-bit <code>real</code> if supported (without 80-bit floating point, <code>real</code> is simply an alias for <code>double</code>).</p>
+<pre><code>struct DigitalNet(U, Size = size_t)
+    if (isUnsigned!U)
+{
+    alias U ComponentType;
+    immutable size_t dimensionF2;///
+    immutable size_t dimensionR;///
+    immutable size_t precision;///
+    immutable Size length;
+    const U[][] basis;
+    private
+    {
+        Size position;
+        U[] shift;
+        U[] current;
+    }
+
+    /// constructor with shift.
+    this (in U[][] basis, size_t precision, in U[] shift)
+    in
+    {
+        assert (precision);
+        assert (precision &lt;= (U.sizeof &lt;&lt; 3));
+    }
+    body
+    {
+        this.dimensionF2 = basis.length;
+        this.dimensionR = shift.length;
+        this.precision = precision;
+        this.length = (cast(typeof (this.length)) 1) &lt;&lt; (this.dimensionF2);
+        this.position = 0;
+        foreach (b; basis)
+            assert (this.dimensionR == b.length);
+        this.basis = basis;
+        this.shift = shift.dup;
+        this.current = this.shift.dup;
+    }
+    /// constructor without shift.
+    this (in U[][] basis, Precision precision)
+    {
+        exception.enforce(basis.length);
+        this (basis, precision, new U[basis[0].length]);
+    }
+    @property U[] front() const /// Input range primitives.
+    {
+        return current.dup;
+    }
+    @property bool empty() const /// ditto
+    {
+        return position == length;
+    }
+    void popFront() /// ditto
+    {
+        exception.enforce(!empty);
+        position += 1;
+        if (this.empty)
+            return;
+        current[] ^= basis[position.bottom_zeros()][];
+    }
+    string toString()
+    {
+        string ret = conv.text(precision, " ", dimensionF2, " ", dimensionR);
+        foreach (l; basis)
+            foreach (x; l)
+                ret ~= conv.text(" ", x);
+        foreach (x; shift)
+            ret ~= conv.text(" ", x);
+        return ret;
+    }
+    /// digital shift.
+    typeof (this) opBinary(string op)(in U[] shift)
+        if (op == "+")
+    {
+        return this.shiftBy(shift);
+    }
+}
+</code></pre>
+	</body>
+</html>

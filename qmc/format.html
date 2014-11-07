@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Format - Ryuichi OHORI</title>
+		<link rel="stylesheet" href="css.css" type="text/css" />
+	</head>
+	<body>
+		<h1>Format</h1>
+		<p>This page describes the format of digital nets on this website.
+		Let <var>s</var>, <var>n</var>, <var>m</var> be the dimension over <span class="mathbb">R</span>, the number of binary digits, and the dimension over <span class="mathbb">F</span><sub>2</sub> of <var>P</var>.
+		The digital net <var>P</var> &sub; <span class="mathbb">F</span><sub>2</sub><sup><var>s</var>&times;<var>n</var></sup> is formatted in one-line ASCII text which consists of (3 + <var>m</var><var>s</var>) integers separated by spaces.</p>
+		<p>The first three integers are <var>n</var>, <var>m</var> and <var>s</var> in this order.
+		The following <var>m</var><var>s</var> <var>n</var>-bit nonnegative integers are the components <var>p</var><sub><var>h</var><var>i</var></sub> (<var>h</var> &isin; <var>m</var>; <var>i</var> &isin; <var>s</var>) of a basis of <var>P</var>, ordered lexicographically by (<var>h</var>, <var>i</var>).
+		To simplify the conversion to real numbers, the most significant bit corresponds to 2<sup>&minus;1</sup>.</p>
+		<p>The code below (written in <a href="http://dlang.org/">D</a>) reads the string <var>line</var> and set <var>s</var>, <var>n</var>, <var>m</var> and <var>p</var>:</p>
+<pre><code>import std.string, std.array, std.conv; // std.string for strip, std.array for split, std.conv for to
+auto buf = line.strip().split();
+immutable n = buf.front.to!size_t(); buf.popFront();
+immutable m = buf.front.to!size_t(); buf.popFront();
+immutable s = buf.front.to!size_t(); buf.popFront();
+auto p = new U[][](m, s);
+foreach (h; 0..m)
+    foreach (i; 0..s)
+    {
+        p[h][i] = buf.front.to!U();
+        buf.popFront();
+    }
+</code></pre>
+		<p>The type <var>U</var> is the unsigned integer which can store at least <var>n</var> bits.
+		Use <code>ubyte</code> for <var>n</var> &le; 8, <code>ushort</code> for <var>n</var> &le; 16, <code>uint</code> for <var>n</var> &le; 32, and <code>ulong</code> for <var>n</var> &le; 64.
+		Almost all generating matrices on this website uses <var>n</var> = 32 and <var>U</var> = <code>uint</code>.</p>
+		<p>To generate each point, simply XOR the elements <code>p[h][i]</code> and divide by 2<sup><var>n</var></sup>:</p>
+<pre><code>auto xi = new U[](s);
+foreach (h; H)
+    foreach (i; 0..s)
+        xi[i] ^= p[h][i];
+auto x = new F[](s);
+foreach (i; 0..s)
+    x[i] = xi[i] * 0.5 ^^ n;
+</code></pre>
+		<p>for each subset <code>H</code> &sub; <var>m</var>.
+		To iterate over <var>P</var> you may use gray-code implementation for efficiency.</p>
+		<p>Additionally, to reduce the discretization error in QMC integration or to avoid the divergence around the boundary of the hypercube you can place each point center of the hypercube by modifying the last two lines:</p>
+<pre><code>foreach (i; 0..s)
+    x[i] = <strong>(</strong>xi[i]<strong> + 0.5)</strong> * 0.5 ^^ n;
+</code></pre>
+		<section>
+			<h2 id="convert">Conversion</h2>
+			<p><a href="http://people.cs.kuleuven.be/~dirk.nuyens/qmc-generators/">Dirk Nuyens' Magic point shop</a> uses a different format, and I provide a converter <strong>from his to mine</strong> here:</p>
+<pre><code>import std.stdio;
+import std.functional : pipe;
+import std.string : strip;
+import std.array : split;
+import std.algorithm : map;
+import std.conv : to;
+import std.array : array;
+import core.bitop : bitswap;
+
+void main()
+{
+    size_t precision = 32, dimensionF2, dimensionR;
+    uint[][] vectors;
+    foreach (line; stdin.byLine().map!(pipe!(strip, split, map!(pipe!(to!uint, bitswap)), array)))
+    {
+        if (dimensionR == 0)
+        {
+            dimensionF2 = line.length;
+            vectors = line.map!(a => [a])().array();
+        }
+        else
+        {
+            assert (dimensionF2 == line.length);
+            foreach (i, ref vector; vectors)
+                vector ~= line[i];
+        }
+        dimensionR += 1;
+    }
+    "%d %d %d%(%( %d%)%)".writefln(precision, dimensionF2, dimensionR, vectors);
+}
+</code></pre>
+			<p>Note that this code depends on <code><a href="http://dlang.org/phobos/core_bitop.html#bitswap">uint bitswap(uint)</a></code> so that it doesn't work for precision &gt; 32 without modification.</p>
+		</section>
+		<section>
+			<h2>Additional information</h2>
+			<p>The line which describes a digital net <var>P</var> may contain additional information.</p>
+			<p>If the number of space-separated integers is (3 + <var>m</var><var>s</var> + <var>m</var>) rather than default (3 + <var>m</var><var>s</var>), the additional <var>m</var> are interpreted as the components of a digital shift <var>&sigma;</var> &isin; <span class="mathbb">F</span><sub>2</sub><sup><var>s</var>&times;<var>n</var></sup> applied to <var>P</var>, in the same manner as the components of the basis.</p>
+			<p>With the exception above, additional information must be separated by a comma ('<code>,</code>') and then follow.
+			Some typical usages are WAFOM value, QMC integration, QMC error, etc.</p>
+		</section>
+	</body>
+</html>
