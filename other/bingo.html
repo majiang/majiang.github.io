@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html><head>
+<title>Bingo!</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<style>
+table
+{
+	width:100%;
+}
+th, td
+{
+	width:2em;
+	border:solid 1px gray;
+	text-align:center;
+}
+td
+{
+	color:#ccc;
+}
+</style>
+
+</head><body>
+
+<div class="container"><table id="main"></table></div>
+<script>
+var width = 15;
+var letters = "BINGO";
+var height = 5;
+function firstRow(table)
+{
+	var row = $("<tr/>");
+	for (var i = 0; i < letters.length; i++)
+	{
+		for (var j = 0; j < width / letters.length; j++)
+		{
+			var cell = $("<th/>");
+			cell.append(letters[i]);
+			row.append(cell);
+		}
+	}
+	table.append(row);
+}
+function addRow(i, table)
+{
+	var row = $("<tr/>");
+	for (var j = 0; j < width; j++)
+	{
+		addCell(i, j, row);
+	}
+	table.append(row);
+}
+function addCell(i, j, row)
+{
+	var cell = $("<td/>");
+	cell.append(i + j * height + 1);
+//	cell.attr("id", "cell" + (i + j * height + 1));
+	cell.click(function(){
+		toggle(cell);
+	});
+	row.append(cell)
+}
+function toggle(cell)
+{
+	if (cell.css("font-weight") != "bold")
+	{
+		cell.css("font-weight", "bold");
+		cell.css("color", "#000");
+		return;
+	}
+	if (confirm("Remove "+cell.html()+"?"))
+	{
+		cell.css("font-weight", "normal");
+		cell.css("color", "#ccc");
+	}
+}
+firstRow($("#main"));
+for (var i = 0; i < height; i++)
+{
+	addRow(i, $("#main"));
+}
+</script>
+</body></html>
