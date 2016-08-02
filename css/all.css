@@ -1,0 +1,21 @@
+table
+{
+    border-collapse: collapse;
+}
+tr > :nth-child(n+2)
+{
+    border-left: thin solid #ddd;
+}
+tbody > tr:nth-of-type(odd)
+{
+    background-color: #eee;
+}
+tbody > tr:nth-of-type(even)
+{
+    background-color: #fff;
+}
+tr > *
+{
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
